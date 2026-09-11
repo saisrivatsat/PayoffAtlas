@@ -1,0 +1,20 @@
+{
+  "name": "loanlens",
+  "version": "2.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "test": "node --test",
+    "check": "npm run test && npm run build"
+  },
+  "dependencies": {
+    "@netlify/blobs": "^11.0.3",
+    "lucide": "^1.44.0"
+  },
+  "devDependencies": {
+    "vite": "^7.3.6"
+  }
+}

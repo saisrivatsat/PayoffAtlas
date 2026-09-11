@@ -1,4 +1,9 @@
 .DS_Store
+node_modules/
+dist/
+.netlify/
+.vite/
+coverage/
 __pycache__/
 *.py[cod]
 .pytest_cache/
@@ -8,9 +13,8 @@ __pycache__/
 venv/
 .env
 .env.*
-.streamlit/secrets.toml
 
-# LoanLens V1 keeps user data in the browser session. Never commit exports,
+# LoanLens keeps user data in each visitor's browser. Never commit exports,
 # lender statements, or local financial data.
 data/
 exports/
@@ -18,3 +22,4 @@ sources/
 *.pdf
 *.xlsx
 *.xls
+*.csv
