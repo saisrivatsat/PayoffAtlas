@@ -1,6 +1,6 @@
-# LoanLens
+# PayoffAtlas
 
-LoanLens is a privacy-first browser app for planning and understanding loans in India and the United States. It supports home, vehicle, education, personal, and custom loans in English and Spanish.
+PayoffAtlas is a privacy-first browser app for planning and understanding loans in India and the United States. It supports home, vehicle, education, personal, and custom loans in English and Spanish.
 
 The app has no login, bank connection, advertising tracker, or cloud database for financial data. Loan details stay in the visitor's browser unless they choose to export a backup.
 
@@ -70,7 +70,7 @@ The private Credila schedules used during initial product discovery were referen
 
 ## Important disclaimer
 
-LoanLens provides **educational planning estimates only**. It is not financial, legal, or tax advice; a lender statement; a loan offer; or a promise of approval or savings. Actual results may differ because lenders can use different compounding and day-count methods, posting dates, rate changes, capitalization, rounding, fees, taxes, insurance, penalties, business-day rules, and prepayment terms. Always compare important results with the latest lender statement and confirm material decisions with the lender or a qualified professional.
+PayoffAtlas provides **educational planning estimates only**. It is not financial, legal, or tax advice; a lender statement; a loan offer; or a promise of approval or savings. Actual results may differ because lenders can use different compounding and day-count methods, posting dates, rate changes, capitalization, rounding, fees, taxes, insurance, penalties, business-day rules, and prepayment terms. Always compare important results with the latest lender statement and confirm material decisions with the lender or a qualified professional.
 
 ## Project structure
 

@@ -14,7 +14,7 @@ venv/
 .env
 .env.*
 
-# LoanLens keeps user data in each visitor's browser. Never commit exports,
+# PayoffAtlas keeps user data in each visitor's browser. Never commit exports,
 # lender statements, or local financial data.
 data/
 exports/

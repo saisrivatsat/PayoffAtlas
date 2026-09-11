@@ -39,8 +39,10 @@ import {
 } from "./finance.js";
 import { translator } from "./i18n.js";
 
-const STORAGE_KEY = "loanlens:v2:profile";
-const VISITOR_KEY = "loanlens:anonymous-visitor";
+const STORAGE_KEY = "payoffatlas:v2:profile";
+const VISITOR_KEY = "payoffatlas:anonymous-visitor";
+const PROFILE_KEY_SUFFIX = ":v2:profile";
+const VISITOR_KEY_SUFFIX = ":anonymous-visitor";
 const PAYMENT_TYPES = ["regular", "extra", "partInterest", "fee"];
 const LOAN_TYPES = ["home", "vehicle", "education", "personal", "other"];
 const app = document.querySelector("#app");
@@ -112,6 +114,22 @@ function objectOr(value, fallback) {
   return value && typeof value === "object" && !Array.isArray(value) ? value : fallback;
 }
 
+function readAndMigrateStoredValue(primaryKey, legacySuffix) {
+  const currentValue = localStorage.getItem(primaryKey);
+  if (currentValue !== null) return currentValue;
+
+  for (let index = 0; index < localStorage.length; index += 1) {
+    const candidateKey = localStorage.key(index);
+    if (!candidateKey || candidateKey === primaryKey || !candidateKey.endsWith(legacySuffix)) continue;
+    const legacyValue = localStorage.getItem(candidateKey);
+    if (legacyValue === null) continue;
+    localStorage.setItem(primaryKey, legacyValue);
+    localStorage.removeItem(candidateKey);
+    return legacyValue;
+  }
+  return null;
+}
+
 function normalizeState(value) {
   const defaults = defaultState();
   const source = objectOr(value, {});
@@ -150,7 +168,7 @@ function normalizeState(value) {
 
 function loadState() {
   try {
-    return normalizeState(JSON.parse(localStorage.getItem(STORAGE_KEY) || "{}"));
+    return normalizeState(JSON.parse(readAndMigrateStoredValue(STORAGE_KEY, PROFILE_KEY_SUFFIX) || "{}"));
   } catch {
     return defaultState();
   }
@@ -244,11 +262,11 @@ function navButton(view, labelKey, iconName) {
 
 function paintShell() {
   document.documentElement.lang = state.language;
-  document.title = state.language === "es" ? "LoanLens — Planea y entiende tu préstamo" : "LoanLens — Plan and understand your loan";
+  document.title = state.language === "es" ? "PayoffAtlas — Planea y entiende tu préstamo" : "PayoffAtlas — Plan and understand your loan";
   app.innerHTML = `
     <a class="skip-link" href="#main">${t("skip")}</a>
     <header class="topbar">
-      <button class="brand" type="button" data-action="navigate" data-view="plan" aria-label="LoanLens"><span class="brand-mark">${icon("gem")}</span><span>LoanLens</span><small>${t("brandPromise")}</small></button>
+      <button class="brand" type="button" data-action="navigate" data-view="plan" aria-label="PayoffAtlas"><span class="brand-mark">${icon("gem")}</span><span>PayoffAtlas</span><small>${t("brandPromise")}</small></button>
       <div class="top-actions">
         <span class="privacy-pill">${icon("shield-check", "shield")}${t("privacy")}</span>
         <div class="visitor-pill" title="${escapeHtml(t("privacyCopy"))}">${icon("users-round")}<span id="visitor-count">${t("counterUnavailable")}</span></div>
@@ -256,7 +274,7 @@ function paintShell() {
         <label class="language-control"><span class="sr-only">${t("language")}</span><select data-action="language" aria-label="${t("language")}"><option value="en" ${state.language === "en" ? "selected" : ""}>English</option><option value="es" ${state.language === "es" ? "selected" : ""}>Español</option></select></label>
       </div>
     </header>
-    <nav class="journey-nav" aria-label="LoanLens">${navButton("plan", "plan", "landmark")}${navButton("track", "track", "chart-no-axes-combined")}${navButton("payments", "payments", "receipt-text")}${navButton("whatif", "whatIf", "wand-sparkles")}</nav>
+    <nav class="journey-nav" aria-label="PayoffAtlas">${navButton("plan", "plan", "landmark")}${navButton("track", "track", "chart-no-axes-combined")}${navButton("payments", "payments", "receipt-text")}${navButton("whatif", "whatIf", "wand-sparkles")}</nav>
     <div class="mobile-community"><span class="pulse" aria-hidden="true"></span><span id="visitor-count-mobile">${t("counterUnavailable")}</span></div>
     ${ui.notice ? `<div class="toast" role="status">${escapeHtml(ui.notice)}</div>` : ""}
     <main id="main" class="workspace">${renderView()}</main>
@@ -510,7 +528,7 @@ function renderChart(series) {
 }
 
 function renderFooter() {
-  return `<footer class="site-footer"><div class="footer-grid"><section><h2>${t("disclaimerTitle")}</h2><p>${t("disclaimer")}</p></section><section><h2>${t("privacyTitle")}</h2><p>${t("privacyCopy")}</p></section></div><div class="footer-actions"><button class="footer-button" type="button" data-action="export-backup">${t("exportProfile")}</button><button class="footer-button" type="button" data-action="import-backup">${t("importProfile")}</button><button class="footer-button danger" type="button" data-action="reset-data">${t("resetData")}</button></div><p class="footer-brand">LoanLens · ${new Date().getFullYear()}</p></footer>`;
+  return `<footer class="site-footer"><div class="footer-grid"><section><h2>${t("disclaimerTitle")}</h2><p>${t("disclaimer")}</p></section><section><h2>${t("privacyTitle")}</h2><p>${t("privacyCopy")}</p></section></div><div class="footer-actions"><button class="footer-button" type="button" data-action="export-backup">${t("exportProfile")}</button><button class="footer-button" type="button" data-action="import-backup">${t("importProfile")}</button><button class="footer-button danger" type="button" data-action="reset-data">${t("resetData")}</button></div><p class="footer-brand">PayoffAtlas · ${new Date().getFullYear()}</p></footer>`;
 }
 
 function setAtPath(path, value) {
@@ -575,7 +593,7 @@ app.addEventListener("click", (event) => {
   if (action === "cancel-payment") { ui.editingPaymentId = null; renderShell(); }
   if (action === "export-csv") exportPaymentsCsv();
   if (action === "import-csv") document.querySelector("#csv-import")?.click();
-  if (action === "export-backup") downloadFile("loanlens-backup.json", JSON.stringify({ version: 2, ...state }, null, 2), "application/json");
+  if (action === "export-backup") downloadFile("payoffatlas-backup.json", JSON.stringify({ version: 2, ...state }, null, 2), "application/json");
   if (action === "import-backup") document.querySelector("#backup-import")?.click();
   if (action === "reset-data") resetData();
 });
@@ -623,7 +641,7 @@ function csvCell(value) {
 function exportPaymentsCsv() {
   const header = "payment_id,payment_date,credited_date,amount,payment_type";
   const rows = state.payments.map((payment) => [payment.id, payment.paymentDate, payment.creditedDate, Number(payment.amount).toFixed(2), payment.type].map(csvCell).join(","));
-  downloadFile("loanlens-payments.csv", [header, ...rows].join("\n"), "text/csv;charset=utf-8");
+  downloadFile("payoffatlas-payments.csv", [header, ...rows].join("\n"), "text/csv;charset=utf-8");
 }
 
 function parseCsvLine(line) {
@@ -691,7 +709,7 @@ function updateVisitorDom() {
 
 async function registerAnonymousVisit() {
   try {
-    let visitorId = localStorage.getItem(VISITOR_KEY);
+    let visitorId = readAndMigrateStoredValue(VISITOR_KEY, VISITOR_KEY_SUFFIX);
     if (!visitorId) { visitorId = crypto.randomUUID(); localStorage.setItem(VISITOR_KEY, visitorId); }
     const response = await fetch("/api/visits", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ visitorId }) });
     if (!response.ok) throw new Error("counter");

@@ -1,6 +1,6 @@
 # Financial-engine validation
 
-LoanLens uses transparent estimates and treats the lender-reported current balance as the source of truth. The automated test suite covers both conventional amortization and the behavior observed in anonymized education-loan schedules. No personal schedule, account identifier, borrower name, or exact payment history is included.
+PayoffAtlas uses transparent estimates and treats the lender-reported current balance as the source of truth. The automated test suite covers both conventional amortization and the behavior observed in anonymized education-loan schedules. No personal schedule, account identifier, borrower name, or exact payment history is included.
 
 ## Representative checks
 

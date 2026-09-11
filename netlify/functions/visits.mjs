@@ -16,7 +16,7 @@ export default async function visits(request) {
   }
 
   try {
-    const store = getStore("loanlens-visitors");
+    const store = getStore("payoffatlas-visitors");
     if (request.method === "POST") {
       const contentLength = Number(request.headers.get("content-length") || 0);
       if (contentLength > 1024) return json({ error: "Request too large" }, 413);
