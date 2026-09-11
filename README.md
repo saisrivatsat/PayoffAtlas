@@ -16,7 +16,7 @@ The app has no login, bank connection, advertising tracker, or cloud database fo
 
 ## Run locally
 
-Node.js 20 or newer is recommended.
+Node.js 24 is recommended.
 
 ```bash
 npm install
